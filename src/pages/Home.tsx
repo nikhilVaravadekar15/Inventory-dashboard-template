@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom"
 import RootLayout from "../components/layouts/RootLayout"
 
+
 function Home() {
     return (
         <RootLayout>

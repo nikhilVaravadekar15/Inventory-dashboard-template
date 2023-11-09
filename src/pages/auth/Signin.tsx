@@ -1,5 +1,4 @@
 import {
-    BiLeftArrowAlt,
     BiRightArrowAlt
 } from "react-icons/bi"
 import { z } from "zod"
@@ -50,13 +49,6 @@ function Signin() {
 
     return (
         <AuthLayout>
-            <Link
-                to={"/"}
-                className="w-fit font-semibold flex gap-3 items-center transition-all duration-200 hover:text-blue-500"
-            >
-                <BiLeftArrowAlt className="ml-2" size={16} />
-                <span>Home</span>
-            </Link>
             <h2 className="text-2xl font-bold leading-tight">Sign in to your account</h2>
             <p className="mt-2 text-sm text-gray-700">
                 {"Don't have an account? "}

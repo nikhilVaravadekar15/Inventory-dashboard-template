@@ -63,13 +63,13 @@ function Signup() {
                 className="w-fit font-semibold flex gap-3 items-center transition-all duration-200 hover:text-blue-500"
             >
                 <BiLeftArrowAlt className="ml-2" size={16} />
-                <span>Home</span>
+                <span>Back</span>
             </Link>
             <h2 className="text-2xl font-bold leading-tight">Sign up to create account</h2>
             <p className="mt-2 text-base text-gray-700">
                 {"Already have an account? "}
                 <Link
-                    to={"/auth/sign-up"}
+                    to={"/auth/sign-in"}
                     className="font-semibold transition-all duration-200 hover:underline hover:text-blue-500"
                 >
                     Sign In

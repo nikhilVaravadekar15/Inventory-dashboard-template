@@ -44,18 +44,21 @@ function App() {
               <Route path="password-reset-done" element={<PasswordResetDone />} />
             </Route>
             <Route path="dashboard">
-              <Route index={true} path="board" element={<Board />} />
-              <Route index={true} path="sales" element={<Sales />} />
-              <Route index={true} path="invoice" element={<Invoice />} />
+              <Route index={true} element={<Board />} />
+              <Route path="board" element={<Board />} />
+              <Route path="sales" element={<Sales />} />
+              <Route path="invoice" element={<Invoice />} />
               <Route path="category">
-                <Route index={true} path="add" element={<AddCategory />} />
-                <Route index={true} path="search" element={<SearchCategory />} />
-                <Route index={true} path="update" element={<UpdateCategory />} />
+                <Route index={true} element={<AddCategory />} />
+                <Route path="add" element={<AddCategory />} />
+                <Route path="search" element={<SearchCategory />} />
+                <Route path="update" element={<UpdateCategory />} />
               </Route>
               <Route path="product">
-                <Route index={true} path="add" element={<AddProduct />} />
-                <Route index={true} path="search" element={<SearchProduct />} />
-                <Route index={true} path="update" element={<UpdateProduct />} />
+                <Route index={true} element={<AddProduct />} />
+                <Route path="add" element={<AddProduct />} />
+                <Route path="search" element={<SearchProduct />} />
+                <Route path="update" element={<UpdateProduct />} />
               </Route>
             </Route>
             <Route path="user">

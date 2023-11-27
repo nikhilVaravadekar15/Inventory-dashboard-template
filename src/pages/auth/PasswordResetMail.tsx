@@ -14,13 +14,13 @@ function PasswordResetMail() {
                 <BsPatchCheck size="2rem" className="text-green-600 hover:text-green-700" />
                 <h1 className="text-2xl font-bold leading-tight">Successfully sent</h1>
             </div>
-            <div className="mt-2 text-base text-gray-700">
+            <div className="mt-2 text-base">
                 We have sent an instruction on how to reset your password to
-                <span className="mx-1 font-medium text-blue-600 cursor-pointer">elon_musk@gmail.com</span>.
+                <span className="mx-1 font-medium text-blue-500 cursor-pointer">elon_musk@gmail.com</span>.
                 Please follow the instructions in the email.
             </div>
             <div className="mt-2">
-                <div className="my-2 text-sm text-gray-700">
+                <div className="my-2 text-sm">
                     If you don't see it, check your spam folder.
                     If you didn't receive the email, click the below button.
                 </div>

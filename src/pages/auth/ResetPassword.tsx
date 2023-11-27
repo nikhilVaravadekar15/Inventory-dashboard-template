@@ -56,13 +56,13 @@ function ResetPassword() {
                 <span>Home</span>
             </a>
             <h2 className="text-2xl font-bold leading-tight">Reset password</h2>
-            <p className="mt-2 text-sm text-gray-700">
+            <p className="mt-2 text-sm">
                 Enter your new password below.
             </p>
             <form className="mt-4" onSubmit={formik.handleSubmit}>
                 <div className="space-y-4">
                     <div className="h-24">
-                        <label htmlFor="" className="text-base font-medium text-gray-800">
+                        <label htmlFor="" className="text-base font-medium">
                             New password
                         </label>
                         <div className="mt-2">

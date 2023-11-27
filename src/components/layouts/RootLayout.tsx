@@ -1,4 +1,5 @@
 import React from 'react'
+import { ThemeProvider } from '../provider/ThemeProvider'
 
 function RootLayout({
     children,
@@ -6,9 +7,11 @@ function RootLayout({
     children: React.ReactNode
 }) {
     return (
-        <div className="h-screen w-screen antialiased overflow-hidden relative z-0">
-            {children}
-        </div>
+        <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+            <main className="h-screen w-screen antialiased overflow-hidden relative z-0">
+                {children}
+            </main>
+        </ThemeProvider>
     )
 }
 

@@ -52,14 +52,14 @@ function ForgetPassword() {
                 <span>Home</span>
             </Link>
             <h2 className="text-2xl font-bold leading-tight">Forgot password</h2>
-            <p className="mt-2 text-base text-gray-700">
+            <p className="mt-2 text-base">
                 {"Forgotten your password? Enter your e-mail address below, and we'll send you an e-mail allowing you to reset it."}
             </p>
             <form className="mt-4" onSubmit={formik.handleSubmit}>
                 <div className="space-y-4">
                     <div className="h-24">
                         <div className="h-20">
-                            <label htmlFor="" className="text-base font-medium text-gray-700">
+                            <label htmlFor="" className="text-base font-medium">
                                 Email address
                             </label>
                             <div className="mt-2">
@@ -80,7 +80,7 @@ function ForgetPassword() {
                         </div>
                         <div className="h-4">
                             <div className="my-2 flex gap-1 items-center justify-end">
-                                <p className="text-sm font-medium text-gray-700">
+                                <p className="text-sm font-medium">
                                     {"Didn't receive"}
                                 </p>
                                 <button type="button" className="text-sm font-semibold hover:underline hover:text-blue-500">
@@ -101,7 +101,7 @@ function ForgetPassword() {
                 </div>
             </form>
             <div className="mt-3 space-y-3">
-                <p className="text-gray-700 text-sm">
+                <p className="text-sm">
                     Read our
                     <span className="mx-1 capitalize cursor-pointer text-blue-500 hover:text-blue-600">
                         privacy policy

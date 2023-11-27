@@ -15,7 +15,7 @@ function SignupVerified() {
                 <BsPatchCheck size="2rem" className="text-green-600 hover:text-green-700" />
                 <h1 className="text-2xl font-bold leading-tight">Email Verified</h1>
             </div>
-            <div className="mt-2 text-base text-gray-700">
+            <div className="mt-2 text-base">
                 Hurray! Your email has been verified. You can now login.
             </div>
             <div className="mt-4">

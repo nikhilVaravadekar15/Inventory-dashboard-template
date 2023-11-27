@@ -66,7 +66,7 @@ function Signup() {
                 <span>Back</span>
             </Link>
             <h2 className="text-2xl font-bold leading-tight">Sign up to create account</h2>
-            <p className="mt-2 text-base text-gray-700">
+            <p className="mt-2 text-base">
                 {"Already have an account? "}
                 <Link
                     to={"/auth/sign-in"}

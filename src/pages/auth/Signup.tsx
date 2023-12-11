@@ -2,59 +2,27 @@ import {
     BiLeftArrowAlt,
     BiRightArrowAlt
 } from "react-icons/bi"
-import { z } from "zod"
 import { Link } from "react-router-dom"
-import { useFormik } from "formik"
 import { TUsersignup } from "../../types/index";
 import AuthLayout from "../../components/layouts/AuthLayout"
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { signupFormSchema } from "../../zod";
+import { Label } from "../../components/ui/label";
+import { Input } from "../../components/ui/input";
+import { Button } from "../../components/ui/button";
+import { ErrorMessage } from "@hookform/error-message";
 
 
 function Signup() {
 
-    const formSchema = z.object({
-        fullname: z.string()
-            .min(1, "Required")
-            .max(64, "Fullname must be less than 64 characters"),
-        email: z.string()
-            .min(1, "Required")
-            .email("Invalid email address"),
-        password: z.string()
-            .min(1, "Required")
-            .min(8, "Password must be greater than 8 characters")
-            .max(12, "Password must be less than 12 characters")
-    })
-
-    const formik = useFormik<TUsersignup>({
-        initialValues: {
-            fullname: "",
-            email: "",
-            password: "",
-        },
-        validate: (values: TUsersignup) => {
-            const errors: Partial<TUsersignup> = {};
-            const result = formSchema.safeParse(values)
-
-            if (!result.success) {
-                const formErrors = result.error.format()
-
-                if (formErrors.fullname) {
-                    errors.fullname = formErrors.fullname?._errors[0]
-                }
-                if (formErrors.email) {
-                    errors.email = formErrors.email?._errors[0]
-                }
-                if (formErrors.password) {
-                    errors.password = formErrors.password?._errors[0]
-                }
-
-            }
-            return errors
-        },
-        onSubmit: (values: TUsersignup) => {
-            alert(JSON.stringify(values, null, 2));
-        },
+    const {
+        register,
+        handleSubmit,
+        formState: { errors }
+    } = useForm<TUsersignup>({
+        resolver: zodResolver(signupFormSchema)
     });
-
 
     return (
         <AuthLayout>
@@ -75,81 +43,76 @@ function Signup() {
                     Sign In
                 </Link>
             </p>
-            <form className="mt-4" onSubmit={formik.handleSubmit}>
-                <div className="space-y-2">
+            <form className="mt-4"
+                onSubmit={handleSubmit((data: TUsersignup) => {
+                    console.log(data);
+                })}
+            >
+                <div className="space-y-1">
                     <div className="h-24">
-                        <label htmlFor="name" className="text-base font-medium">
+                        <Label className="text-base font-medium">
                             Fullname
-                        </label>
-                        <div className="mt-2">
-                            <input
-                                name="fullname"
+                        </Label>
+                        <div>
+                            <Input
                                 type="text"
                                 autoComplete={"off"}
-                                placeholder="fullname"
-                                value={formik.values.fullname}
-                                onChange={formik.handleChange}
+                                {...register("username", { required: true })}
                                 className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                             />
-                            {
-                                formik.errors.fullname && formik.touched.fullname && (
-                                    <span className="text-xs text-red-500">{formik.errors.fullname}</span>
-                                )
-                            }
+                            <ErrorMessage
+                                errors={errors}
+                                name="username"
+                                as={<p className="text-xs text-red-500"></p>}
+                            />
                         </div>
                     </div>
                     <div className="h-24">
-                        <label htmlFor="email" className="text-base font-medium">
-                            Email address
-                        </label>
-                        <div className="mt-2">
-                            <input
-                                name="email"
+                        <Label className="text-base font-medium">
+                            Email
+                        </Label>
+                        <div>
+                            <Input
                                 type="email"
-                                placeholder="Email"
                                 autoComplete={"off"}
-                                value={formik.values.email}
-                                onChange={formik.handleChange}
+                                {...register("email", { required: true })}
                                 className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                             />
-                            {
-                                formik.errors.email && formik.touched.email && (
-                                    <span className="text-xs text-red-500">{formik.errors.email}</span>
-                                )
-                            }
+                            <ErrorMessage
+                                errors={errors}
+                                name="email"
+                                as={<p className="text-xs text-red-500"></p>}
+                            />
                         </div>
                     </div>
                     <div className="h-24">
                         <div className="flex items-center justify-between">
-                            <label htmlFor="password" className="text-base font-medium">
+                            <Label className="text-base font-medium">
                                 Password
-                            </label>
+                            </Label>
                         </div>
-                        <div className="mt-2">
-                            <input
-                                name="password"
+                        <div>
+                            <Input
                                 type="password"
-                                placeholder="Password"
                                 autoComplete={"off"}
-                                value={formik.values.password}
-                                onChange={formik.handleChange}
+                                {...register("password", { required: true })}
                                 className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                             />
-                            {
-                                formik.errors.password && formik.touched.password && (
-                                    <span className="text-xs text-red-500">{formik.errors.password}</span>
-                                )
-                            }
+                            <ErrorMessage
+                                errors={errors}
+                                name="password"
+                                as={<p className="text-xs text-red-500"></p>}
+                            />
                         </div>
                     </div>
                     <div className="h-16 flex items-center">
-                        <button
+                        <Button
                             type="submit"
                             className="inline-flex w-full items-center justify-center rounded-md bg-gray-200 px-3.5 py-2.5 font-semibold leading-7 text-black hover:bg-gray-300"
                         >
                             Get started
                             <BiRightArrowAlt className="ml-2" size={16} />
-                        </button>
+                        </Button>
                     </div>
                 </div>
             </form>

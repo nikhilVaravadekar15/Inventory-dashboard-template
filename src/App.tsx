@@ -18,7 +18,7 @@ import Invoice from './pages/dashboard/Invoice';
 import AddCategory from './pages/dashboard/category/AddCategory';
 import SearchCategory from './pages/dashboard/category/SearchCategory';
 import UpdateCategory from './pages/dashboard/category/UpdateCategory';
-import AddProduct from './pages/dashboard/product/AddCategory';
+import AddProduct from './pages/dashboard/product/AddProduct';
 import SearchProduct from './pages/dashboard/product/SearchProduct';
 import UpdateProduct from './pages/dashboard/product/UpdateCategory';
 import UserProfile from './pages/user/UserProfile';
@@ -34,7 +34,8 @@ function App() {
           <Route path="/">
             <Route index={true} element={<Signin />} />
             <Route path="auth">
-              <Route index={true} path="sign-in" element={<Signin />} />
+              <Route index={true} element={<Signin />} />
+              <Route path="sign-in" element={<Signin />} />
               <Route path="sign-up" element={<Signup />} />
               <Route path="email-verification" element={<EmailVerification />} />
               <Route path="sign-up-verified" element={<SignupVerified />} />

@@ -6,13 +6,40 @@ import { Input } from "../../../components/ui/input";
 import { TAddCategorySchema } from "../../../types";
 import { Button } from "../../../components/ui/button";
 import DashboardLayout from "../../../components/layouts/DashboardLayout"
+import { useMutation, useQueryClient } from "react-query";
+import { addCategory } from "../../../http";
+import { useToast } from "../../../components/ui/use-toast";
+import { cn } from "../../../lib/utils";
+import LoadingSpinner from "../../../components/LoadingSpinner";
 
 
 function AddCategory() {
 
+    const { toast } = useToast()
+    const queryClient = useQueryClient()
+
     const { register, handleSubmit } = useForm<TAddCategorySchema>({
         resolver: zodResolver(addCategorySchema)
     });
+
+    const addCategoryMutation = useMutation({
+        mutationFn: async (data: TAddCategorySchema) => {
+            return await addCategory(data)
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries('categories')
+            toast({
+                title: "Category added",
+            })
+        },
+        onError: () => {
+            toast({
+                variant: "destructive",
+                title: "Uh oh! Something went wrong.",
+                description: "There was a problem with your request.",
+            })
+        },
+    })
 
     return (
         <DashboardLayout>
@@ -20,7 +47,10 @@ function AddCategory() {
                 Add Category
             </h1>
             <form
-                className="py-4 flex gap-4 flex-col"
+                className={cn(
+                    "py-4 flex gap-4 flex-col",
+                    addCategoryMutation.isLoading ? "pointer-events-none" : "pointer-events-auto"
+                )}
                 onSubmit={handleSubmit((data: TAddCategorySchema) => {
                     console.log(data);
                 })}
@@ -49,7 +79,17 @@ function AddCategory() {
                         variant={"secondary"}
                         className="font-semibold"
                     >
-                        Submit
+                        {
+                            addCategoryMutation.isLoading
+                                ? (
+                                    <>
+                                        <LoadingSpinner classname="h-6 w-6" />
+                                    </>
+                                )
+                                : (
+                                    <>Submit</>
+                                )
+                        }
                     </Button>
                 </div>
             </form>

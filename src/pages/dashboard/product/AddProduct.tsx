@@ -8,19 +8,45 @@ import { Button } from "../../../components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import AddCetegoryDialog from "../../../components/AddCetegoryDialog";
 import DashboardLayout from "../../../components/layouts/DashboardLayout"
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { addProduct, getAllCategories } from "../../../http";
+import { TAddProductSchema } from "../../../types";
+import { useToast } from "../../../components/ui/use-toast";
+import LoadingSpinner from "../../../components/LoadingSpinner";
+import { cn } from "../../../lib/utils";
 
 
 function AddProduct() {
 
-    const { register, handleSubmit, } = useForm({
+    const { toast } = useToast()
+    const queryClient = useQueryClient()
+
+    const { register, handleSubmit, } = useForm<TAddProductSchema>({
         resolver: zodResolver(addProductSchema)
     });
 
-    const options = [
-        { value: 'chocolate', label: 'Chocolate' },
-        { value: 'strawberry', label: 'Strawberry' },
-        { value: 'vanilla', label: 'Vanilla' }
-    ]
+    const query = useQuery("categories", async () => {
+        return await getAllCategories()
+    })
+
+    const addProductMutation = useMutation({
+        mutationFn: async (data: TAddProductSchema) => {
+            return await addProduct(data)
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries('products')
+            toast({
+                title: "Product added",
+            })
+        },
+        onError: () => {
+            toast({
+                variant: "destructive",
+                title: "Uh oh! Something went wrong.",
+                description: "There was a problem with your request.",
+            })
+        },
+    })
 
     return (
         <DashboardLayout>
@@ -28,15 +54,20 @@ function AddProduct() {
                 Add Product
             </h1>
             <form
-                className="py-4 flex gap-2 flex-col"
-                onSubmit={handleSubmit((data: any) => {
+                className={cn(
+                    "py-4 flex gap-2 flex-col",
+                    addProductMutation.isLoading ? "pointer-events-none" : "pointer-events-auto"
+                )}
+                onSubmit={handleSubmit((data: TAddProductSchema) => {
                     data = {
                         ...data,
+                        // @ts-expect-error
                         category: {
                             productCategory: data.category
                         }
                     }
                     console.log(data);
+                    addProductMutation.mutate(data)
                 })}>
                 <div className="space-y-2">
                     <div className="flex flex-col">
@@ -136,7 +167,7 @@ function AddProduct() {
                                 {...register("category", { required: true })}
                             >
                                 {
-                                    options.map((option: any, index: number) => {
+                                    query.data?.data.options.map((option: any, index: number) => {
                                         return (
                                             <option
                                                 key={index}
@@ -159,7 +190,17 @@ function AddProduct() {
                         variant={"secondary"}
                         className="font-semibold"
                     >
-                        Submit
+                        {
+                            addProductMutation.isLoading
+                                ? (
+                                    <>
+                                        <LoadingSpinner classname="h-6 w-6" />
+                                    </>
+                                )
+                                : (
+                                    <>Submit</>
+                                )
+                        }
                     </Button>
                 </div>
             </form>

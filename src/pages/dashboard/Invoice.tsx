@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
     Trash2,
     PlusSquare
@@ -11,34 +11,76 @@ import {
     TableHeader,
     TableRow,
 } from "../../components/ui/table"
-import { Button } from "../../components/ui/button";
+import React from "react";
+import { TInvoice } from "../../types";
 import { Label } from "../../components/ui/label";
 import { Input } from "../../components/ui/input";
+import { Button } from "../../components/ui/button";
 import { useFieldArray, useForm } from "react-hook-form";
 import DashboardLayout from "../../components/layouts/DashboardLayout"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { invoiceSchema } from "../../zod";
+import { useToast } from "../../components/ui/use-toast";
+import { useMutation } from "react-query";
+import { addInvoice } from "../../http";
+import { cn } from "../../lib/utils";
+import LoadingSpinner from "../../components/LoadingSpinner";
 
 
 function InvoicePage() {
+
+    const { toast } = useToast()
 
     const {
         register,
         control,
         handleSubmit,
-        // watch
-    } = useForm({});
+    } = useForm<TInvoice>({
+        resolver: zodResolver(invoiceSchema)
+    });
 
     const { fields, append, remove } = useFieldArray({
         name: "products",
         control: control
     });
-    // const products = watch("products", fields);
 
+    const addInvoiceMutation = useMutation({
+        mutationFn: async (data: TInvoice) => {
+            return await addInvoice(data)
+        },
+        onSuccess: () => {
+            toast({
+                title: "Invoice added",
+            })
+        },
+        onError: () => {
+            toast({
+                variant: "destructive",
+                title: "Uh oh! Something went wrong.",
+                description: "There was a problem with your request.",
+            })
+        },
+    })
+
+    React.useEffect(() => {
+        append({
+            category: "",
+            productName: "",
+            quantity: 1
+        })
+        return () => {
+            remove(0)
+        }
+    }, [])
 
     return (
         <DashboardLayout>
             <form
-                className="h-full"
-                onSubmit={handleSubmit((data: any) => {
+                className={cn(
+                    "h-full overflow-scroll",
+                    addInvoiceMutation.isLoading ? "pointer-events-none" : "pointer-events-auto"
+                )}
+                onSubmit={handleSubmit((data: TInvoice) => {
                     console.log(data)
                 })}
             >
@@ -51,7 +93,19 @@ function InvoicePage() {
                         variant={"outline"}
                         className="flex gap-1 items-center justify-center"
                     >
-                        <span className="font-bold">Submit</span>
+                        {
+                            addInvoiceMutation.isLoading
+                                ? (
+                                    <>
+                                        <LoadingSpinner classname="h-6 w-6" />
+                                    </>
+                                )
+                                : (
+                                    <>
+                                        <span className="font-bold">Submit</span>
+                                    </>
+                                )
+                        }
                     </Button>
                 </div>
                 <div className="grid gap-2 grid-cols-2">
@@ -64,6 +118,7 @@ function InvoicePage() {
                             <div className="my-2">
                                 <Input
                                     type="text"
+                                    autoFocus={true}
                                     autoComplete={"off"}
                                     {...register("customerName", { required: true })}
                                 />
@@ -73,15 +128,15 @@ function InvoicePage() {
                     <div className="space-y-2">
                         <div className="flex flex-col">
                             <Label>
-                                Manufacturing date:
+                                Invoice date:
                                 <span className="text-red-500">*</span>
                             </Label>
                             <div className="my-2">
                                 <Input
                                     type="date"
-                                    placeholder="manufacturingDate"
+                                    placeholder="invoiceDate"
                                     autoComplete={"off"}
-                                    {...register("manufacturingDate", { required: true })}
+                                    {...register("invoiceDate", { required: true })}
                                 />
                             </div>
                         </div>
@@ -98,7 +153,11 @@ function InvoicePage() {
                                 <TableHead className="text-right">
                                     <Button
                                         onClick={() => {
-                                            append({})
+                                            append({
+                                                category: "",
+                                                productName: "",
+                                                quantity: 0
+                                            })
                                         }}
                                         variant={"outline"} type="button"
                                         className="flex gap-1 items-center justify-center"

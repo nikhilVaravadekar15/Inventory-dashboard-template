@@ -3,14 +3,13 @@ import {
     Wallet,
     Newspaper,
     BellRing,
-    Wrench,
-    LogOut,
     Settings,
     User,
     PlusCircle,
     Search,
     Pencil,
     Layers3,
+    LogOut,
 } from "lucide-react"
 import {
     DropdownMenu,
@@ -21,10 +20,14 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '../components/ui/dropdown-menu'
+import React from "react"
 import { Link } from 'react-router-dom'
 import { Label } from "./ui/label"
 import { Button } from "./ui/button"
 import ThemeToggle from "./ThemeToggle"
+import { TTokenContext } from "../types"
+import TokenService from "../services/TokenService"
+import { AuthContext, defaultToken } from "./provider/AuthContextProvider"
 
 
 function LeftSidebar() {
@@ -178,6 +181,8 @@ function CategoryDropdownMenu() {
 }
 
 function SettingDropdownMenu() {
+
+    const { setTokenDetails } = React.useContext<TTokenContext>(AuthContext);
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -186,7 +191,7 @@ function SettingDropdownMenu() {
                     className="flex transform items-center rounded-lg px-3 py-3 transition-colors duration-300 hover:bg-gray-300 hover:text-gray-700"
 
                 >
-                    <Wrench className="h-5 w-5" aria-hidden="true" />
+                    <Settings className="h-5 w-5" aria-hidden="true" />
                     <span className="mx-2 text-sm font-medium">Setting</span>
                 </Link>
             </DropdownMenuTrigger>
@@ -198,7 +203,7 @@ function SettingDropdownMenu() {
                 <DropdownMenuGroup>
                     <DropdownMenuItem asChild>
                         <Link
-                            to={"/user/profile"}
+                            to={"/dashboard/user/profile"}
                             className="flex transform items-center rounded-lg px-4 py-4 transition-colors duration-300 cursor-pointer hover:bg-gray-300 hover:text-gray-700"
                         >
                             <User className="mr-2 h-4 w-4" />
@@ -206,22 +211,6 @@ function SettingDropdownMenu() {
                         </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                        <Link
-                            to={"/user/settings"}
-                            className="flex transform items-center rounded-lg px-4 py-4 transition-colors duration-300 cursor-pointer hover:bg-gray-300 hover:text-gray-700"
-                        >
-                            <Settings className="mr-2 h-4 w-4" />
-                            <span>Settings</span>
-                        </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                        {/* <Link
-                            to={"/user/settings"}
-                            className="flex transform items-center rounded-lg px-4 py-4 transition-colors duration-300 cursor-pointer hover:bg-gray-300 hover:text-gray-700"
-                        >
-                            <Settings className="mr-2 h-4 w-4" />
-                            <span>Settings</span>
-                        </Link> */}
                         <ThemeToggle />
                     </DropdownMenuItem>
                 </DropdownMenuGroup>
@@ -230,6 +219,13 @@ function SettingDropdownMenu() {
                     <Button
                         variant={"destructive"}
                         className="w-full"
+                        onClick={() => {
+                            TokenService.removeToken()
+                            setTokenDetails(defaultToken)
+                            const link = document.createElement("a");
+                            link.href = "/";
+                            link.click();
+                        }}
                     >
                         <LogOut className="mr-2 h-4 w-4" />
                         <span>Log out</span>

@@ -12,10 +12,14 @@ import { Label } from "../../components/ui/label";
 import { Input } from "../../components/ui/input";
 import { Button } from "../../components/ui/button";
 import { ErrorMessage } from "@hookform/error-message";
+import { useToast } from "../../components/ui/use-toast";
+import { useMutation } from "react-query";
+import { userSignUp } from "../../http";
 
 
 function Signup() {
 
+    const { toast } = useToast();
     const {
         register,
         handleSubmit,
@@ -23,6 +27,25 @@ function Signup() {
     } = useForm<TUsersignup>({
         resolver: zodResolver(signupFormSchema)
     });
+
+    const signupMutation = useMutation({
+        mutationFn: async (data: TUsersignup) => {
+            return await userSignUp(data)
+        },
+        onSuccess: () => {
+            const link = document.createElement("a");
+            link.href = "/auth/sign-up-completed";
+            link.click();
+        },
+        onError: () => {
+            toast({
+                variant: "destructive",
+                title: "User already exists",
+                description: "Please enter the correct username/email",
+            })
+        }
+    })
+
 
     return (
         <AuthLayout>
@@ -45,13 +68,22 @@ function Signup() {
             </p>
             <form className="mt-4"
                 onSubmit={handleSubmit((data: TUsersignup) => {
-                    console.log(data);
+                    if (data.password != data.cpassword) {
+                        toast({
+                            variant: "destructive",
+                            title: "Password did not match",
+                            description: "Please enter the correct password",
+                        })
+                        return
+                    } else {
+                        signupMutation.mutate(data)
+                    }
                 })}
             >
                 <div className="space-y-1">
-                    <div className="h-24">
+                    <div className="h-20">
                         <Label className="text-base font-medium">
-                            Fullname
+                            Username
                         </Label>
                         <div>
                             <Input
@@ -67,7 +99,7 @@ function Signup() {
                             />
                         </div>
                     </div>
-                    <div className="h-24">
+                    <div className="h-20">
                         <Label className="text-base font-medium">
                             Email
                         </Label>
@@ -85,7 +117,7 @@ function Signup() {
                             />
                         </div>
                     </div>
-                    <div className="h-24">
+                    <div className="h-20">
                         <div className="flex items-center justify-between">
                             <Label className="text-base font-medium">
                                 Password
@@ -101,6 +133,26 @@ function Signup() {
                             <ErrorMessage
                                 errors={errors}
                                 name="password"
+                                as={<p className="text-xs text-red-500"></p>}
+                            />
+                        </div>
+                    </div>
+                    <div className="h-20">
+                        <div className="flex items-center justify-between">
+                            <Label className="text-base font-medium">
+                                Confirm password
+                            </Label>
+                        </div>
+                        <div>
+                            <Input
+                                type="password"
+                                autoComplete={"off"}
+                                {...register("cpassword", { required: true })}
+                                className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
+                            />
+                            <ErrorMessage
+                                errors={errors}
+                                name="cpassword"
                                 as={<p className="text-xs text-red-500"></p>}
                             />
                         </div>

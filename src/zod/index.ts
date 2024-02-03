@@ -26,14 +26,15 @@ export const passwd = z.object({
 })
 
 export const signinFormSchema = z.object({
-    email: email,
+    usernameOrEmail: username,
     password: password
 })
 
 export const signupFormSchema = z.object({
     username: username,
     email: email,
-    password: password
+    password: password,
+    cpassword: password
 })
 
 export const addProductSchema = z.object({
@@ -54,4 +55,19 @@ export const addCategorySchema = z.object({
     name: z.string()
         .min(1, "Required"),
     description: z.string().optional()
+})
+
+export const invoiceProductsSchema = z.object({
+    category: z.string()
+        .min(1, "Required"),
+    productName: z.string()
+        .min(1, "Required"),
+    quantity: z.number()
+})
+
+export const invoiceSchema = z.object({
+    customerName: z.string()
+        .min(1, "Required"),
+    invoiceDate: z.date(),
+    products: invoiceProductsSchema.array()
 })

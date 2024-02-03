@@ -1,5 +1,8 @@
 import React from 'react'
 import { ThemeProvider } from '../provider/ThemeProvider'
+import ReactQueryClientProvider from '../provider/ReactQueryClientProvider'
+import { Toaster } from '../ui/toaster'
+import AuthContextProvider from '../provider/AuthContextProvider'
 
 function RootLayout({
     children,
@@ -7,11 +10,20 @@ function RootLayout({
     children: React.ReactNode
 }) {
     return (
-        <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-            <main className="h-screen w-screen antialiased overflow-hidden relative z-0">
-                {children}
-            </main>
-        </ThemeProvider>
+        <ReactQueryClientProvider>
+            <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+
+                <AuthContextProvider>
+                    <AuthContextProvider>
+                        <main className="h-screen w-screen antialiased overflow-hidden relative z-0">
+                            {children}
+                        </main>
+                        <Toaster />
+                    </AuthContextProvider>
+                </AuthContextProvider>
+
+            </ThemeProvider>
+        </ReactQueryClientProvider>
     )
 }
 

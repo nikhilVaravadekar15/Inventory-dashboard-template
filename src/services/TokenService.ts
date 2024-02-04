@@ -17,6 +17,11 @@ class TokenService {
         return this.cookie?.get("token") as TToken;
     }
 
+    getAuthToken() {
+        const token = this.cookie?.get("token") as TToken;
+        return `${token?.tokenType} ${token?.accessToken}`
+    }
+
     removeToken() {
         this.cookie?.remove("token");
     }

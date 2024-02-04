@@ -74,7 +74,13 @@ function LeftSidebar() {
                             <Newspaper className="h-5 w-5" aria-hidden="true" />
                             <span className="mx-2 text-sm font-medium">Invoice</span>
                         </Link>
-                        <CategoryDropdownMenu />
+                        <Link
+                            to={"/dashboard/category"}
+                            className="flex transform items-center rounded-lg px-3 py-3 transition-colors duration-300 hover:bg-gray-300 hover:text-gray-700"
+                        >
+                            <Layers3 className="h-5 w-5" aria-hidden="true" />
+                            <span className="mx-2 text-sm font-medium">Category</span>
+                        </Link>
                     </div>
                     <div className="space-y-3 ">
                         <Label className="px-3 text-xs font-semibold uppercase">Customization</Label>
@@ -125,53 +131,6 @@ function ProductDropdownMenu() {
                         >
                             <Pencil className="mr-2 h-4 w-4" />
                             <span>Update Product</span>
-                        </Link>
-                    </DropdownMenuItem>
-                </DropdownMenuGroup>
-            </DropdownMenuContent>
-        </DropdownMenu>
-    )
-}
-
-function CategoryDropdownMenu() {
-    return (
-        <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-                <Button
-                    variant={"ghost"}
-                    className="w-full flex transform items-start justify-start rounded-lg px-3 py-2 transition-colors duration-300 hover:bg-gray-300 hover:text-gray-700"
-                >
-                    <Layers3 className="h-5 w-5" aria-hidden="true" />
-                    <span className="mx-2 text-sm font-medium">Category</span>
-                </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56">
-                <DropdownMenuGroup>
-                    <DropdownMenuItem asChild>
-                        <Link
-                            to={"/dashboard/category/add"}
-                            className="flex transform items-center rounded-lg px-4 py-4 transition-colors duration-300 cursor-pointer hover:bg-gray-300 hover:text-gray-700"
-                        >
-                            <PlusCircle className="mr-2 h-4 w-4" />
-                            <span>Add Category</span>
-                        </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                        <Link
-                            to={"/dashboard/category/search"}
-                            className="flex transform items-center rounded-lg px-4 py-4 transition-colors duration-300 cursor-pointer hover:bg-gray-300 hover:text-gray-700"
-                        >
-                            <Search className="mr-2 h-4 w-4" />
-                            <span>Search Category</span>
-                        </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                        <Link
-                            to={"/dashboard/category/update"}
-                            className="flex transform items-center rounded-lg px-4 py-4 transition-colors duration-300 cursor-pointer hover:bg-gray-300 hover:text-gray-700"
-                        >
-                            <Pencil className="mr-2 h-4 w-4" />
-                            <span>Update Category</span>
                         </Link>
                     </DropdownMenuItem>
                 </DropdownMenuGroup>

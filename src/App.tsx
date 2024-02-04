@@ -18,9 +18,7 @@ import RootLayout from './components/layouts/RootLayout'
 import Board from './pages/dashboard/Board';
 import Sales from './pages/dashboard/Sales';
 import Invoice from './pages/dashboard/Invoice';
-import AddCategory from './pages/dashboard/category/AddCategory';
-import SearchCategory from './pages/dashboard/category/SearchCategory';
-import UpdateCategory from './pages/dashboard/category/UpdateCategory';
+import Categories from './pages/dashboard/category/Categories';
 import AddProduct from './pages/dashboard/product/AddProduct';
 import SearchProduct from './pages/dashboard/product/SearchProduct';
 import UpdateProduct from './pages/dashboard/product/UpdateCategory';
@@ -67,10 +65,7 @@ function App() {
                 <Route path="sales" element={<Sales />} />
                 <Route path="invoice" element={<Invoice />} />
                 <Route path="category">
-                  <Route index={true} element={<AddCategory />} />
-                  <Route path="add" element={<AddCategory />} />
-                  <Route path="search" element={<SearchCategory />} />
-                  <Route path="update" element={<UpdateCategory />} />
+                  <Route index={true} element={<Categories />} />
                 </Route>
                 <Route path="product">
                   <Route index={true} element={<AddProduct />} />

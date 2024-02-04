@@ -17,7 +17,8 @@ Currently, two official plugins are available:
    ```
   
 2. Run the development server:
-   ```bash
+   ```
+      cp .env.example .env
       npm run dev
    ```
 

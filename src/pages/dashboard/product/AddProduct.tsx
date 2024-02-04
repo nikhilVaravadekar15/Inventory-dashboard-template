@@ -1,19 +1,21 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { PlusCircle } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { addProductSchema } from "../../../zod";
 import { Input } from "../../../components/ui/input";
 import { Label } from "../../../components/ui/label";
 import { Button } from "../../../components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
-import AddCetegoryDialog from "../../../components/AddCetegoryDialog";
-import DashboardLayout from "../../../components/layouts/DashboardLayout"
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { addProduct, getAllCategories } from "../../../http";
-import { TAddProductSchema } from "../../../types";
-import { useToast } from "../../../components/ui/use-toast";
-import LoadingSpinner from "../../../components/LoadingSpinner";
 import { cn } from "../../../lib/utils";
+import { TAddProductSchema } from "../../../types";
+import TokenService from "../../../services/TokenService";
+import { useToast } from "../../../components/ui/use-toast";
+import { addProduct, getAllCategories } from "../../../http";
+import CetegoryDialog from "../../../components/CetegoryDialog";
+import LoadingSpinner from "../../../components/LoadingSpinner";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import DashboardLayout from "../../../components/layouts/DashboardLayout"
 
 
 function AddProduct() {
@@ -26,7 +28,7 @@ function AddProduct() {
     });
 
     const query = useQuery("categories", async () => {
-        return await getAllCategories()
+        return await getAllCategories(TokenService.getAuthToken())
     })
 
     const addProductMutation = useMutation({
@@ -67,7 +69,7 @@ function AddProduct() {
                         }
                     }
                     console.log(data);
-                    addProductMutation.mutate(data)
+                    // addProductMutation.mutate(data)
                 })}>
                 <div className="space-y-2">
                     <div className="flex flex-col">
@@ -167,20 +169,24 @@ function AddProduct() {
                                 {...register("category", { required: true })}
                             >
                                 {
-                                    query.data?.data.options.map((option: any, index: number) => {
+                                    query.data?.data?.map((option: any, index: number) => {
                                         return (
                                             <option
                                                 key={index}
-                                                value={option.value}
+                                                value={option?.productCategory}
                                                 className="p-2 m-2 dark:bg-slate-800"
                                             >
-                                                {option.label}
+                                                {option?.productCategory}
                                             </option>
                                         )
                                     })
                                 }
                             </select>
-                            <AddCetegoryDialog />
+                            <CetegoryDialog>
+                                <Button type="button" variant="outline" className="rounded-full">
+                                    <PlusCircle />
+                                </Button>
+                            </CetegoryDialog>
                         </div>
                     </div>
                 </div>

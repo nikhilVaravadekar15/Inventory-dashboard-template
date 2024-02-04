@@ -42,7 +42,7 @@ export const addProductSchema = z.object({
         .min(1, "Required"),
     batchNo: z.string()
         .min(1, "Required"),
-    quantity: z.string(),
+    quantity: z.number().gte(0, "Must be greater the zero"),
     purchasePrice: z.string(),
     sellingPrice: z.string(),
     manufacturingDate: z.string(),
@@ -52,9 +52,8 @@ export const addProductSchema = z.object({
 })
 
 export const addCategorySchema = z.object({
-    name: z.string()
+    productCategory: z.string()
         .min(1, "Required"),
-    description: z.string().optional()
 })
 
 export const invoiceProductsSchema = z.object({

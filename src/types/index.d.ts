@@ -1,44 +1,39 @@
-import { z } from "zod"
+import { z } from "zod";
 import {
-    mail,
-    name,
-    passwd,
-    signinFormSchema,
-    signupFormSchema,
-    addProductSchema,
-    addCategorySchema,
-    invoiceProductsSchema,
-    invoiceSchema
-} from "../zod/index"
+  mail,
+  name,
+  passwd,
+  signinFormSchema,
+  signupFormSchema,
+  addCategorySchema,
+  invoiceProductsSchema,
+  invoiceSchema,
+} from "../zod/index";
 
+export type TName = z.infer<typeof name>;
+export type TEmail = z.infer<typeof mail>;
+export type TPassword = z.infer<typeof passwd>;
 
-export type TName = z.infer<typeof name>
-export type TEmail = z.infer<typeof mail>
-export type TPassword = z.infer<typeof passwd>
+export type TUsersignin = z.infer<typeof signinFormSchema>;
+export type TUsersignup = z.infer<typeof signupFormSchema>;
 
-export type TUsersignin = z.infer<typeof signinFormSchema>
-export type TUsersignup = z.infer<typeof signupFormSchema>
-
-export type TAddProductSchema = z.infer<typeof addProductSchema>
-export type TAddCategorySchema = z.infer<typeof addCategorySchema>
-
-export type TInvoiceProducts = z.infer<typeof invoiceProductsSchema>
-export type TInvoice = z.infer<typeof invoiceSchema>
-
+export type TAddCategorySchema = z.infer<typeof addCategorySchema>;
+export type TInvoiceProducts = z.infer<typeof invoiceProductsSchema>;
+export type TInvoice = z.infer<typeof invoiceSchema>;
 
 export type TUser = {
-    tokenType: string
-}
+  tokenType: string;
+};
 
 export type TToken = {
-    accessToken: string,
-    tokenType: string
-}
+  accessToken: string;
+  tokenType: string;
+};
 
 export type TTokenContext = {
-    token: TToken,
-    setTokenDetails: (token: TToken) => void
-}
+  token: TToken;
+  setTokenDetails: (token: TToken) => void;
+};
 
 // type TInvoiceProducts = {
 //     category: string

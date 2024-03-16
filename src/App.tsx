@@ -1,47 +1,48 @@
-import './App.css'
+import "./App.css";
 import {
-  BrowserRouter, Navigate, Outlet, Route, Routes
+  BrowserRouter,
+  Navigate,
+  Outlet,
+  Route,
+  Routes,
 } from "react-router-dom";
-import React from 'react';
-import { TToken } from './types';
-import NotFound from './pages/NotFound';
-import Signin from './pages/auth/Signin';
-import Signup from './pages/auth/Signup';
-import SignupCompleted from './pages/auth/SignupCompleted';
+import React from "react";
+import { TToken } from "./types";
+import NotFound from "./pages/NotFound";
+import Signin from "./pages/auth/Signin";
+import Signup from "./pages/auth/Signup";
+import SignupCompleted from "./pages/auth/SignupCompleted";
 // import PasswordResetMail from './pages/auth/PasswordResetMail';
 // import ForgetPassword from './pages/auth/ForgetPassword';
 // import SignupVerified from './pages/auth/SignupVerified';
 // import EmailVerification from './pages/auth/EmailVerification';
 // import ResetPassword from './pages/auth/ResetPassword';
 // import PasswordResetDone from './pages/auth/PasswordResetDone';
-import RootLayout from './components/layouts/RootLayout'
-import Board from './pages/dashboard/Board';
-import Sales from './pages/dashboard/Sales';
-import Invoice from './pages/dashboard/Invoice';
-import Categories from './pages/dashboard/category/Categories';
-import AddProduct from './pages/dashboard/product/AddProduct';
-import SearchProduct from './pages/dashboard/product/SearchProduct';
-import UpdateProduct from './pages/dashboard/product/UpdateCategory';
-import UserProfile from './pages/user/UserProfile';
-import TokenService from './services/TokenService';
-
+import RootLayout from "./components/layouts/RootLayout";
+import Board from "./pages/dashboard/Board";
+import Sales from "./pages/dashboard/Sales";
+import Invoice from "./pages/dashboard/Invoice";
+import Categories from "./pages/dashboard/category/Categories";
+import AddProduct from "./pages/dashboard/product/AddProduct";
+import SearchProduct from "./pages/dashboard/product/SearchProduct";
+import UpdateProduct from "./pages/dashboard/product/UpdateProduct";
+import UserProfile from "./pages/user/UserProfile";
+import TokenService from "./services/TokenService";
 
 function App() {
-
   const [token, setToken] = React.useState<TToken>();
   React.useEffect(() => {
-    const token = TokenService.getToken()
+    const token = TokenService.getToken();
     if (token?.accessToken && token.tokenType) {
-      setToken(token)
+      setToken(token);
     }
-  }, [token])
+  }, [token]);
 
   return (
     <RootLayout>
       <BrowserRouter>
         <Routes>
           <Route path="/">
-
             <Route element={<UnProtectedRoutes token={token!} />}>
               <Route index={true} element={<Signin />} />
               <Route path="auth">
@@ -84,27 +85,24 @@ function App() {
           </Route>
         </Routes>
       </BrowserRouter>
-    </RootLayout >
-  )
+    </RootLayout>
+  );
 }
 
-
 function UnProtectedRoutes({ token }: { token: TToken }) {
-
   return !token?.accessToken && !token?.tokenType ? (
     <Outlet />
   ) : (
     <Navigate to="/dashboard" />
-  )
+  );
 }
 
 function PrivateRoutes({ token }: { token: TToken }) {
-
   return token?.accessToken && token?.tokenType ? (
     <Outlet />
   ) : (
     <Navigate to="/auth" />
-  )
+  );
 }
 
-export default App
+export default App;

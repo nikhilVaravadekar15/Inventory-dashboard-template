@@ -1,10 +1,7 @@
-import {
-    BiLeftArrowAlt,
-    BiRightArrowAlt
-} from "react-icons/bi"
-import { Link } from "react-router-dom"
+import { BiLeftArrowAlt, BiRightArrowAlt } from "react-icons/bi";
+import { Link } from "react-router-dom";
 import { TUsersignup } from "../../types/index";
-import AuthLayout from "../../components/layouts/AuthLayout"
+import AuthLayout from "../../components/layouts/AuthLayout";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signupFormSchema } from "../../zod";
@@ -16,160 +13,152 @@ import { useToast } from "../../components/ui/use-toast";
 import { useMutation } from "react-query";
 import { userSignUp } from "../../http";
 
-
 function Signup() {
+  const { toast } = useToast();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<TUsersignup>({
+    resolver: zodResolver(signupFormSchema),
+  });
 
-    const { toast } = useToast();
-    const {
-        register,
-        handleSubmit,
-        formState: { errors }
-    } = useForm<TUsersignup>({
-        resolver: zodResolver(signupFormSchema)
-    });
+  const signupMutation = useMutation({
+    mutationFn: async (data: TUsersignup) => {
+      return await userSignUp(data);
+    },
+    onSuccess: () => {
+      const link = document.createElement("a");
+      link.href = "/auth/sign-up-completed";
+      link.click();
+    },
+    onError: () => {
+      toast({
+        variant: "destructive",
+        title: "User already exists",
+        description: "Please enter the correct username/email",
+      });
+    },
+  });
 
-    const signupMutation = useMutation({
-        mutationFn: async (data: TUsersignup) => {
-            return await userSignUp(data)
-        },
-        onSuccess: () => {
-            const link = document.createElement("a");
-            link.href = "/auth/sign-up-completed";
-            link.click();
-        },
-        onError: () => {
+  return (
+    <AuthLayout>
+      <Link
+        to={"/"}
+        className="w-fit font-semibold flex gap-3 items-center transition-all duration-200 hover:text-blue-500"
+      >
+        <BiLeftArrowAlt className="ml-2" size={16} />
+        <span>Back</span>
+      </Link>
+      <h2 className="text-2xl font-bold leading-tight">
+        Sign up to create account
+      </h2>
+      <p className="mt-2 text-base">
+        {"Already have an account? "}
+        <Link
+          to={"/auth/sign-in"}
+          className="font-semibold transition-all duration-200 hover:underline hover:text-blue-500"
+        >
+          Sign In
+        </Link>
+      </p>
+      <form
+        className="mt-4"
+        onSubmit={handleSubmit((data: TUsersignup) => {
+          if (data.password != data.cpassword) {
             toast({
-                variant: "destructive",
-                title: "User already exists",
-                description: "Please enter the correct username/email",
-            })
-        }
-    })
-
-
-    return (
-        <AuthLayout>
-            <Link
-                to={"/"}
-                className="w-fit font-semibold flex gap-3 items-center transition-all duration-200 hover:text-blue-500"
+              variant: "destructive",
+              title: "Password did not match",
+              description: "Please enter the correct password",
+            });
+            return;
+          } else {
+            signupMutation.mutate(data);
+          }
+        })}
+      >
+        <div className="space-y-1">
+          <div className="h-20">
+            <Label className="text-base font-medium">Username</Label>
+            <div>
+              <Input
+                type="text"
+                autoComplete={"off"}
+                {...register("username", { required: true })}
+                className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
+              />
+              <ErrorMessage
+                errors={errors}
+                name="username"
+                as={<p className="text-xs text-red-500"></p>}
+              />
+            </div>
+          </div>
+          <div className="h-20">
+            <Label className="text-base font-medium">Email</Label>
+            <div>
+              <Input
+                type="email"
+                autoComplete={"off"}
+                {...register("email", { required: true })}
+                className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
+              />
+              <ErrorMessage
+                errors={errors}
+                name="email"
+                as={<p className="text-xs text-red-500"></p>}
+              />
+            </div>
+          </div>
+          <div className="h-20">
+            <div className="flex items-center justify-between">
+              <Label className="text-base font-medium">Password</Label>
+            </div>
+            <div>
+              <Input
+                type="password"
+                autoComplete={"off"}
+                {...register("password", { required: true })}
+                className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
+              />
+              <ErrorMessage
+                errors={errors}
+                name="password"
+                as={<p className="text-xs text-red-500"></p>}
+              />
+            </div>
+          </div>
+          <div className="h-20">
+            <div className="flex items-center justify-between">
+              <Label className="text-base font-medium">Confirm password</Label>
+            </div>
+            <div>
+              <Input
+                type="password"
+                autoComplete={"off"}
+                {...register("cpassword", { required: true })}
+                className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
+              />
+              <ErrorMessage
+                errors={errors}
+                name="cpassword"
+                as={<p className="text-xs text-red-500"></p>}
+              />
+            </div>
+          </div>
+          <div className="h-16 flex items-center">
+            <Button
+              type="submit"
+              className="inline-flex w-full items-center justify-center rounded-md bg-gray-200 px-3.5 py-2.5 font-semibold leading-7 text-black hover:bg-gray-300"
             >
-                <BiLeftArrowAlt className="ml-2" size={16} />
-                <span>Back</span>
-            </Link>
-            <h2 className="text-2xl font-bold leading-tight">Sign up to create account</h2>
-            <p className="mt-2 text-base">
-                {"Already have an account? "}
-                <Link
-                    to={"/auth/sign-in"}
-                    className="font-semibold transition-all duration-200 hover:underline hover:text-blue-500"
-                >
-                    Sign In
-                </Link>
-            </p>
-            <form className="mt-4"
-                onSubmit={handleSubmit((data: TUsersignup) => {
-                    if (data.password != data.cpassword) {
-                        toast({
-                            variant: "destructive",
-                            title: "Password did not match",
-                            description: "Please enter the correct password",
-                        })
-                        return
-                    } else {
-                        signupMutation.mutate(data)
-                    }
-                })}
-            >
-                <div className="space-y-1">
-                    <div className="h-20">
-                        <Label className="text-base font-medium">
-                            Username
-                        </Label>
-                        <div>
-                            <Input
-                                type="text"
-                                autoComplete={"off"}
-                                {...register("username", { required: true })}
-                                className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
-                            />
-                            <ErrorMessage
-                                errors={errors}
-                                name="username"
-                                as={<p className="text-xs text-red-500"></p>}
-                            />
-                        </div>
-                    </div>
-                    <div className="h-20">
-                        <Label className="text-base font-medium">
-                            Email
-                        </Label>
-                        <div>
-                            <Input
-                                type="email"
-                                autoComplete={"off"}
-                                {...register("email", { required: true })}
-                                className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
-                            />
-                            <ErrorMessage
-                                errors={errors}
-                                name="email"
-                                as={<p className="text-xs text-red-500"></p>}
-                            />
-                        </div>
-                    </div>
-                    <div className="h-20">
-                        <div className="flex items-center justify-between">
-                            <Label className="text-base font-medium">
-                                Password
-                            </Label>
-                        </div>
-                        <div>
-                            <Input
-                                type="password"
-                                autoComplete={"off"}
-                                {...register("password", { required: true })}
-                                className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
-                            />
-                            <ErrorMessage
-                                errors={errors}
-                                name="password"
-                                as={<p className="text-xs text-red-500"></p>}
-                            />
-                        </div>
-                    </div>
-                    <div className="h-20">
-                        <div className="flex items-center justify-between">
-                            <Label className="text-base font-medium">
-                                Confirm password
-                            </Label>
-                        </div>
-                        <div>
-                            <Input
-                                type="password"
-                                autoComplete={"off"}
-                                {...register("cpassword", { required: true })}
-                                className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
-                            />
-                            <ErrorMessage
-                                errors={errors}
-                                name="cpassword"
-                                as={<p className="text-xs text-red-500"></p>}
-                            />
-                        </div>
-                    </div>
-                    <div className="h-16 flex items-center">
-                        <Button
-                            type="submit"
-                            className="inline-flex w-full items-center justify-center rounded-md bg-gray-200 px-3.5 py-2.5 font-semibold leading-7 text-black hover:bg-gray-300"
-                        >
-                            Get started
-                            <BiRightArrowAlt className="ml-2" size={16} />
-                        </Button>
-                    </div>
-                </div>
-            </form>
-        </AuthLayout>
-    )
+              Get started
+              <BiRightArrowAlt className="ml-2" size={16} />
+            </Button>
+          </div>
+        </div>
+      </form>
+    </AuthLayout>
+  );
 }
 
-export default Signup
+export default Signup;

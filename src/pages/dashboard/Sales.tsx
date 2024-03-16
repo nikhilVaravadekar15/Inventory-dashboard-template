@@ -1,12 +1,7 @@
-import DashboardLayout from "../../components/layouts/DashboardLayout"
-
+import DashboardLayout from "../../components/layouts/DashboardLayout";
 
 function Board() {
-    return (
-        <DashboardLayout>
-            Sales
-        </DashboardLayout>
-    )
+  return <DashboardLayout>Sales</DashboardLayout>;
 }
 
-export default Board
+export default Board;

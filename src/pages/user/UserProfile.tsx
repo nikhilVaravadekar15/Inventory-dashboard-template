@@ -1,12 +1,7 @@
-import DashboardLayout from "../../components/layouts/DashboardLayout"
-
+import DashboardLayout from "../../components/layouts/DashboardLayout";
 
 function UserProfile() {
-    return (
-        <DashboardLayout>
-            User Profile
-        </DashboardLayout>
-    )
+  return <DashboardLayout>User Profile</DashboardLayout>;
 }
 
-export default UserProfile
+export default UserProfile;

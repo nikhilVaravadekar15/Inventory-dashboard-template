@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { PlusCircle } from "lucide-react";
@@ -18,7 +19,7 @@ function AddProduct() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, reset } = useForm();
 
   const query = useQuery("categories", async () => {
     return await getAllCategories(TokenService.getAuthToken());
@@ -26,19 +27,20 @@ function AddProduct() {
 
   const addProductMutation = useMutation({
     mutationFn: async (data: any) => {
-      return await addProduct(data);
+      return await addProduct(data, TokenService.getAuthToken());
     },
     onSuccess: () => {
       queryClient.invalidateQueries("products");
       toast({
         title: "Product added",
       });
+      reset();
     },
-    onError: () => {
+    onError: (error: any) => {
       toast({
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
-        description: "There was a problem with your request.",
+        description: `There was a problem with your request. ${error.response.data}`,
       });
     },
   });
@@ -64,7 +66,7 @@ function AddProduct() {
             },
           };
           console.log(data);
-          // addProductMutation.mutate(data)
+          addProductMutation.mutate(data);
         })}
       >
         <div className="space-y-2">

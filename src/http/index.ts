@@ -1,11 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios, { AxiosRequestConfig } from "axios";
-import {
-  TAddCategorySchema,
-  TInvoice,
-  TUsersignin,
-  TUsersignup,
-} from "../types";
+import { TAddCategorySchema, TUsersignin, TUsersignup } from "../types";
 
 export const axiosRequestConfig: AxiosRequestConfig = {
   baseURL: import.meta.env.VITE_PUBLIC_API_BASE_URL!,
@@ -35,13 +30,27 @@ export async function userSignUp(formData: TUsersignup) {
   );
 }
 
-export async function addProduct(formData: any) {
+export async function getAllProducts(auth: string) {
+  return await axios.get("api/user/products/allProducts", {
+    ...axiosRequestConfig,
+    headers: {
+      Authorization: auth,
+    },
+  });
+}
+
+export async function addProduct(formData: any, auth: string) {
   return await axios.post(
-    "/product/addProduct/",
+    "api/user/products/addProduct",
     {
       ...formData,
     },
-    axiosRequestConfig
+    {
+      ...axiosRequestConfig,
+      headers: {
+        Authorization: auth,
+      },
+    }
   );
 }
 
@@ -88,12 +97,30 @@ export async function updateCategoryById(
   );
 }
 
-export async function addInvoice(formData: TInvoice) {
-  return await axios.post(
-    "/product/addProduct/",
-    {
-      ...formData,
+// ######################## search
+export async function getAllProductsByName(name: string, auth: string) {
+  return await axios.get(`api/user/products/byName?name=${name}`, {
+    ...axiosRequestConfig,
+    headers: {
+      Authorization: auth,
     },
-    axiosRequestConfig
-  );
+  });
+}
+
+export async function getAllProductsByCategory(name: string, auth: string) {
+  return await axios.get(`api/user/products/byCategory?category=${name}`, {
+    ...axiosRequestConfig,
+    headers: {
+      Authorization: auth,
+    },
+  });
+}
+
+export async function getAllProductsByBatch(name: string, auth: string) {
+  return await axios.get(`api/user/products/searchProduct?s${name}`, {
+    ...axiosRequestConfig,
+    headers: {
+      Authorization: auth,
+    },
+  });
 }

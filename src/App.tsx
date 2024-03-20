@@ -36,7 +36,7 @@ function App() {
     if (token?.accessToken && token.tokenType) {
       setToken(token);
     }
-  }, [token]);
+  }, []);
 
   return (
     <RootLayout>

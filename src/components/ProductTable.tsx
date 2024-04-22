@@ -21,10 +21,12 @@ export default function ProductTable({ products }: { products: [] }) {
           <TableHead>Name</TableHead>
           <TableHead>Purchase</TableHead>
           <TableHead>Selling</TableHead>
+          <TableHead>Batch</TableHead>
           <TableHead>Quantity</TableHead>
           <TableHead>Manufacturing</TableHead>
           <TableHead>Expiry</TableHead>
           <TableHead>Category</TableHead>
+          <TableHead>Status</TableHead>
           <TableHead className="text-center border">Actions</TableHead>
         </TableRow>
       </TableHeader>
@@ -35,10 +37,12 @@ export default function ProductTable({ products }: { products: [] }) {
             <TableCell>{product.name}</TableCell>
             <TableCell>{product.purchasePrice}</TableCell>
             <TableCell>{product.sellingPrice}</TableCell>
+            <TableCell>{product.batchNo}</TableCell>
             <TableCell>{product.quantity}</TableCell>
             <TableCell>{product.manufacturingDate}</TableCell>
             <TableCell>{product.expiryDate}</TableCell>
             <TableCell>{product.category.productCategory}</TableCell>
+            <TableCell>{product.status}</TableCell>
             <TableCell className="text-right flex gap-2 items-center justify-center border">
               <Button variant={"outline"} className="rounded-full">
                 <Edit size={"0.8rem"} />

@@ -1,6 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios, { AxiosRequestConfig } from "axios";
-import { TAddCategorySchema, TUsersignin, TUsersignup } from "../types";
+import {
+  TAddCategorySchema,
+  TInvoice,
+  TUsersignin,
+  TUsersignup,
+} from "../types";
 
 export const axiosRequestConfig: AxiosRequestConfig = {
   baseURL: import.meta.env.VITE_PUBLIC_API_BASE_URL!,
@@ -117,10 +122,43 @@ export async function getAllProductsByCategory(name: string, auth: string) {
 }
 
 export async function getAllProductsByBatch(name: string, auth: string) {
-  return await axios.get(`api/user/products/searchProduct?s${name}`, {
+  return await axios.get(`api/user/products/batchNo?batch=${name}`, {
     ...axiosRequestConfig,
     headers: {
       Authorization: auth,
     },
   });
+}
+
+export async function getAllActiveProducts(auth: string) {
+  return await axios.get(`api/user/products/allProductsActive`, {
+    ...axiosRequestConfig,
+    headers: {
+      Authorization: auth,
+    },
+  });
+}
+
+export async function getAllInactiveProducts(auth: string) {
+  return await axios.get(`api/user/products/allProductsInactive`, {
+    ...axiosRequestConfig,
+    headers: {
+      Authorization: auth,
+    },
+  });
+}
+
+export async function addInvoice(formData: TInvoice, auth: string) {
+  return await axios.post(
+    "/api/user/categories/addCategory",
+    {
+      ...formData,
+    },
+    {
+      ...axiosRequestConfig,
+      headers: {
+        Authorization: auth,
+      },
+    }
+  );
 }

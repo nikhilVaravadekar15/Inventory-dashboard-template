@@ -22,6 +22,7 @@ import { useMutation } from "react-query";
 import { addInvoice } from "../../http";
 import { cn } from "../../lib/utils";
 import LoadingSpinner from "../../components/LoadingSpinner";
+import TokenService from "../../services/TokenService";
 
 function InvoicePage() {
   const { toast } = useToast();
@@ -37,7 +38,8 @@ function InvoicePage() {
 
   const addInvoiceMutation = useMutation({
     mutationFn: async (data: TInvoice) => {
-      return await addInvoice(data);
+      console.log(data);
+      return await addInvoice(data, TokenService.getAuthToken());
     },
     onSuccess: () => {
       toast({

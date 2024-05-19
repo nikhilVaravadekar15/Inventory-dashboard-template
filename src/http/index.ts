@@ -260,7 +260,7 @@ export async function getExpiredProducts(auth: string) {
 
 export async function addInvoice(formData: TInvoice, auth: string) {
   return await axios.post(
-    "/api/user/categories/addCategory",
+    "/api/user/invoice/addInvoice",
     {
       ...formData,
     },

@@ -45,7 +45,7 @@ function Board() {
         <GetYearlyLoss /> */}
         </div>
         <Tabs
-          defaultValue="near-expiry-products"
+          defaultValue="products-in-low-stock"
           className="h-full w-full mb-2"
         >
           <TabsList>

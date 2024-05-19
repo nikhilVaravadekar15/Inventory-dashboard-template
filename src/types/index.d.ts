@@ -6,8 +6,8 @@ import {
   signinFormSchema,
   signupFormSchema,
   addCategorySchema,
-  invoiceProductsSchema,
-  invoiceSchema,
+  // invoiceProductsSchema,
+  // invoiceSchema,
 } from "../zod/index";
 
 export type TName = z.infer<typeof name>;
@@ -18,8 +18,8 @@ export type TUsersignin = z.infer<typeof signinFormSchema>;
 export type TUsersignup = z.infer<typeof signupFormSchema>;
 
 export type TAddCategorySchema = z.infer<typeof addCategorySchema>;
-export type TInvoiceProducts = z.infer<typeof invoiceProductsSchema>;
-export type TInvoice = z.infer<typeof invoiceSchema>;
+// export type TInvoiceProducts = z.infer<typeof invoiceProductsSchema>;
+// export type TInvoice = z.infer<typeof invoiceSchema>;
 
 export type TUser = {
   tokenType: string;
@@ -35,14 +35,14 @@ export type TTokenContext = {
   setTokenDetails: (token: TToken) => void;
 };
 
-// type TInvoiceProducts = {
-//     category: string
-//     productName: string
-//     quantity: number
-// }
+export type TInvoiceProducts = {
+  category: string;
+  productName: string;
+  quantity: number;
+};
 
-// type TInvoice = {
-//     customerName: string
-//     invoiceDate: string
-//     products: TInvoiceProducts[]
-// }
+export type TInvoice = {
+  customerName: string;
+  invoiceDate: string;
+  products: TInvoiceProducts[];
+};

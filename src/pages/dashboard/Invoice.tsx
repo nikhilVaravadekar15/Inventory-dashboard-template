@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Trash2, PlusSquare } from "lucide-react";
 import {
@@ -9,31 +10,31 @@ import {
   TableRow,
 } from "../../components/ui/table";
 import React from "react";
+import { cn } from "../../lib/utils";
+import { addInvoice, getAllCategories } from "../../http";
+import { useMutation, useQuery } from "react-query";
 import { TInvoice } from "../../types";
 import { Label } from "../../components/ui/label";
 import { Input } from "../../components/ui/input";
 import { Button } from "../../components/ui/button";
-import { useFieldArray, useForm } from "react-hook-form";
-import DashboardLayout from "../../components/layouts/DashboardLayout";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { invoiceSchema } from "../../zod";
-import { useToast } from "../../components/ui/use-toast";
-import { useMutation } from "react-query";
-import { addInvoice } from "../../http";
-import { cn } from "../../lib/utils";
-import LoadingSpinner from "../../components/LoadingSpinner";
 import TokenService from "../../services/TokenService";
+import { useToast } from "../../components/ui/use-toast";
+import { useFieldArray, useForm } from "react-hook-form";
+import LoadingSpinner from "../../components/LoadingSpinner";
+import DashboardLayout from "../../components/layouts/DashboardLayout";
 
 function InvoicePage() {
   const { toast } = useToast();
 
-  const { register, control, handleSubmit } = useForm<TInvoice>({
-    resolver: zodResolver(invoiceSchema),
-  });
+  const { register, control, handleSubmit } = useForm<TInvoice>();
 
   const { fields, append, remove } = useFieldArray({
     name: "products",
     control: control,
+  });
+
+  const categoriesQuery = useQuery("categories", async () => {
+    return await getAllCategories(TokenService.getAuthToken());
   });
 
   const addInvoiceMutation = useMutation({
@@ -41,12 +42,14 @@ function InvoicePage() {
       console.log(data);
       return await addInvoice(data, TokenService.getAuthToken());
     },
-    onSuccess: () => {
+    onSuccess: (data: any) => {
+      console.log(data);
       toast({
         title: "Invoice added",
       });
     },
-    onError: () => {
+    onError: (error: any) => {
+      console.log(error);
       toast({
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
@@ -76,7 +79,7 @@ function InvoicePage() {
             : "pointer-events-auto"
         )}
         onSubmit={handleSubmit((data: TInvoice) => {
-          console.log(data);
+          addInvoiceMutation.mutate(data);
         })}
       >
         <div className="my-2 flex items-center justify-between">
@@ -121,12 +124,7 @@ function InvoicePage() {
                 <span className="text-red-500">*</span>
               </Label>
               <div className="my-2">
-                <Input
-                  type="date"
-                  placeholder="invoiceDate"
-                  autoComplete={"off"}
-                  {...register("invoiceDate", { required: true })}
-                />
+                <Input type="date" {...register("invoiceDate")} />
               </div>
             </div>
           </div>
@@ -145,7 +143,7 @@ function InvoicePage() {
                       append({
                         category: "",
                         productName: "",
-                        quantity: 0,
+                        quantity: 1,
                       });
                     }}
                     variant={"outline"}
@@ -164,20 +162,32 @@ function InvoicePage() {
                   <TableRow key={field.id}>
                     <TableCell className="font-medium">{index + 1}</TableCell>
                     <TableCell className="font-medium">
-                      <Input
-                        type="text"
-                        autoComplete="off"
-                        placeholder="Category"
-                        {...register(`products.${index}.category` as const, {
+                      <select
+                        className="w-72 p-2 rounded bg-transparent border"
+                        {...register(`products.${index}.category`, {
                           required: true,
                         })}
-                      />
+                      >
+                        {categoriesQuery.data?.data?.map(
+                          (option: any, index: number) => {
+                            return (
+                              <option
+                                key={index}
+                                value={option?.productCategory}
+                                className="p-2 m-2 dark:bg-slate-800"
+                              >
+                                {option?.productCategory}
+                              </option>
+                            );
+                          }
+                        )}
+                      </select>
                     </TableCell>
                     <TableCell>
                       <Input
                         type="text"
                         autoComplete="off"
-                        {...register(`products.${index}.productName` as const, {
+                        {...register(`products.${index}.productName`, {
                           required: true,
                         })}
                       />
@@ -185,10 +195,7 @@ function InvoicePage() {
                     <TableCell>
                       <Input
                         type="number"
-                        autoComplete="off"
-                        {...register(`products.${index}.quantity` as const, {
-                          required: true,
-                        })}
+                        {...register(`products.${index}.quantity`)}
                       />
                     </TableCell>
                     <TableCell className="text-right">

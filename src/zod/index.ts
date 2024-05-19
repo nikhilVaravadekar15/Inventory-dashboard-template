@@ -49,6 +49,6 @@ export const invoiceProductsSchema = z.object({
 
 export const invoiceSchema = z.object({
   customerName: z.string().min(1, "Required"),
-  invoiceDate: z.date(),
+  invoiceDate: z.string().min(1, "Required"),
   products: invoiceProductsSchema.array(),
 });

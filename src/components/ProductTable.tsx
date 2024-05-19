@@ -9,6 +9,7 @@ import {
 } from "./ui/table";
 import { Button } from "./ui/button";
 import { Edit } from "lucide-react";
+import { Link } from "react-router-dom";
 import DeleteProductAlertDialog from "./DeleteProductAlertDialog";
 
 export default function ProductTable({ products }: { products: [] }) {
@@ -32,8 +33,8 @@ export default function ProductTable({ products }: { products: [] }) {
       </TableHeader>
       <TableBody>
         {products.map((product: any, index: number) => (
-          <TableRow key={index}>
-            <TableCell className="font-medium">{index}</TableCell>
+          <TableRow key={product.id}>
+            <TableCell className="font-medium">{index + 1}</TableCell>
             <TableCell>{product.name}</TableCell>
             <TableCell>{product.purchasePrice}</TableCell>
             <TableCell>{product.sellingPrice}</TableCell>
@@ -45,7 +46,9 @@ export default function ProductTable({ products }: { products: [] }) {
             <TableCell>{product.status}</TableCell>
             <TableCell className="text-right flex gap-2 items-center justify-center border">
               <Button variant={"outline"} className="rounded-full">
-                <Edit size={"0.8rem"} />
+                <Link to={`/dashboard/product/update?productId=${product.id}`}>
+                  <Edit size={"0.8rem"} />
+                </Link>
               </Button>
               <DeleteProductAlertDialog id={index.toString()} />
             </TableCell>

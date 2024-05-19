@@ -9,7 +9,9 @@ function DashboardLayout({ children }: { children: React.ReactNode }) {
         <div className="h-full w-64">
           <LeftSidebar />
         </div>
-        <div className="p-8 h-full w-[calc(100%-16rem)]">{children}</div>
+        <div className="p-8 h-full w-[calc(100%-16rem)] overflow-y-scroll">
+          {children}
+        </div>
       </div>
     </RootLayout>
   );
